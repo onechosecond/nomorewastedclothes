@@ -81,7 +81,7 @@ window.DRESS_UP_ITEMS = {
       id: "top_12",
       label: "줄무늬 나시",
       color: "#888888",
-      description: "세로 줄무늬 나시",
+      description: "가로 줄무늬 나시",
       price: 10000,
     },
     {
