@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이제 새 옷은 그만!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import { fairyDustCursor } from "https://unpkg.com/cursor-effects@latest/dist/esm.js";
+    
+      new fairyDustCursor();
+    </script>
+  </head>
+  <body class="page archive-page">
+    <div class="archive-layout">
+
+      <aside class="archive-left-panel">
+        <a class="back-link" href="index.html">← 시작 화면으로</a>
+        <header class="page-heading">
+          <div>
+            <p class="eyebrow">Archive</p>
+            <h1>Vintage Collection</h1>
+            <p class="lead">빈티지 샵에서 실제로 구입한 옷을 모아봤어요.</p>
+          </div>
+        </header>
+        
+        <div class="archive-detail" id="archive-detail">
+          <p class="archive-detail-placeholder">아이템을 클릭하면 상세정보가 표시됩니다.</p>
+        </div>
+      </aside>
+
+      <section class="archive-right-panel">
+        <div class="archive-content-wrapper" id="archive-content"></div>
+      </section>
+    </div>
+
+    <audio id="background-music" loop autoplay>
+      <source src="cooked.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="data.js"></script>
+    <script src="archive.js"></script>
+    <script>
+      (() => {
+        const bgMusic = document.getElementById("background-music");
+        if (bgMusic) {
+          bgMusic.volume = 0.5;
+          bgMusic.play().catch((err) => {
+            console.log("Background music autoplay failed:", err);
+            document.addEventListener("click", () => {
+              bgMusic.play().catch((err) => {
+                console.log("Background music play failed:", err);
+              });
+            }, { once: true });
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

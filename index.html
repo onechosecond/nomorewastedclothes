@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이제 새 옷은 그만!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      [data-cursor],
+      .cursor,
+      .ghost-cursor,
+      .cursor-effect,
+      div[style*="cursor"],
+      body > div[style*="position: fixed"][style*="pointer"],
+      canvas[data-cursor],
+      svg[data-cursor] {
+        z-index: 9999 !important;
+      }
+    </style>
+    <script type="module">
+      import { ghostCursor } from "https://unpkg.com/cursor-effects@latest/dist/esm.js";
+    
+      new ghostCursor();
+      
+      setTimeout(() => {
+        const cursorElements = document.querySelectorAll('[id*="cursor"], [class*="cursor"], canvas, svg');
+        cursorElements.forEach(el => {
+          const style = window.getComputedStyle(el);
+          if (style.position === 'fixed' || style.position === 'absolute') {
+            el.style.zIndex = '9999';
+          }
+        });
+      }, 100);
+      
+      const observer = new MutationObserver(() => {
+        const cursorElements = document.querySelectorAll('[id*="cursor"], [class*="cursor"], canvas, svg');
+        cursorElements.forEach(el => {
+          const style = window.getComputedStyle(el);
+          if (style.position === 'fixed' || style.position === 'absolute') {
+            el.style.zIndex = '9999';
+          }
+        });
+      });
+      
+      observer.observe(document.body, { childList: true, subtree: true });
+    </script>
+  </head>
+  <body class="landing">
+    <div class="hover-images-container" id="hover-images-container"></div>
+    <main class="panel">
+      <p class="eyebrow">Thrift Shopping Simulator</p>
+      <h1>이제 새 옷은 그만!</h1>
+      <p class="lead">빈티지 옷은 가격도 저렴하고 환경도 지킬 수 있어요.<br>함정을 피해 멋진 빈티지 옷을 고르는 연습을 해보세요!</p>
+      <div class="button-row">
+        <a class="btn primary" href="play.html">Play</a>
+        <a class="btn secondary" href="archive.html">Archive</a>
+      </div>
+      <div class="button-row" style="margin-top: 1rem;">
+        <a class="btn secondary" href="thrift.html">진짜 헌 옷은 어떻게 구할 수 있을까?</a>
+      </div>
+    </main>
+    <script>
+      (() => {
+        function playHoverSound() {
+          const audio = new Audio("https://taira-komori.net/sound_os2/game01/select05.mp3");
+          audio.volume = 0.5;
+          audio.play().catch((err) => {
+            console.log("Audio play failed:", err);
+          });
+        }
+
+        function playClickSound() {
+          const audio = new Audio("https://taira-komori.net/sound_os2/game01/poka03.mp3");
+          audio.volume = 0.5;
+          audio.play().catch((err) => {
+            console.log("Audio play failed:", err);
+          });
+        }
+
+        const buttons = document.querySelectorAll(".button-row .btn");
+        buttons.forEach((btn) => {
+          btn.addEventListener("mouseenter", playHoverSound);
+          btn.addEventListener("click", playClickSound);
+        });
+
+        const container = document.getElementById("hover-images-container");
+        
+        const hoverSounds = [
+          "https://taira-komori.net/sound_os2/daily02/magazine1.mp3",
+          "https://taira-komori.net/sound_os2/daily02/dumping.mp3",
+          "https://taira-komori.net/sound_os2/daily01/shaking_a_crisp_bag1.mp3",
+          "https://taira-komori.net/sound_os2/daily02/staple.mp3",
+          "https://taira-komori.net/sound_os2/putting01/putting_a_book1.mp3",
+          "https://taira-komori.net/sound_os2/putting01/putting_a_book3.mp3",
+          "https://taira-komori.net/sound_os2/putting01/lifting_a_bag.mp3",
+          "https://taira-komori.net/sound_os2/putting01/lifting_a_garbage_bag.mp3"
+        ];
+
+        function playRandomHoverSound() {
+          const randomSound = hoverSounds[Math.floor(Math.random() * hoverSounds.length)];
+          const audio = new Audio(randomSound);
+          audio.volume = 0.3;
+          audio.play().catch((err) => {
+            console.log("Audio play failed:", err);
+          });
+        }
+        
+        const totalTagImages = 67;
+        
+        function calculateImageCount() {
+          const area = window.innerWidth * window.innerHeight;
+          return Math.max(80, Math.ceil(area / 15000));
+        }
+        
+        const numImages = calculateImageCount();
+
+        let availableTagNumbers = [];
+        for (let i = 1; i <= totalTagImages; i++) {
+          availableTagNumbers.push(i);
+        }
+
+        for (let i = 0; i < numImages; i++) {
+          const img = document.createElement("img");
+          
+          if (availableTagNumbers.length === 0) {
+            break;
+          }
+          
+          const randomIndex = Math.floor(Math.random() * availableTagNumbers.length);
+          const randomTagNumber = availableTagNumbers[randomIndex];
+          
+          availableTagNumbers.splice(randomIndex, 1);
+          img.className = "hover-image";
+          img.alt = "hang tag";
+          
+          const setImageSize = function() {
+            if (this.naturalWidth > 0 && this.naturalHeight > 0) {
+              const originalWidth = this.naturalWidth;
+              const originalHeight = this.naturalHeight;
+              this.style.width = (originalWidth * 0.5) + "px";
+              this.style.height = (originalHeight * 0.5) + "px";
+            }
+          };
+          
+          img.onload = setImageSize;
+          img.src = `tag_${randomTagNumber}.png`;
+          
+          if (img.complete && img.naturalWidth > 0) {
+            setImageSize.call(img);
+          }
+          
+          const randomX = Math.random() * window.innerWidth;
+          const randomY = Math.random() * window.innerHeight;
+          const randomRotation = Math.random() * 360; // 0도 ~ 360도 (더 다양하게)
+          
+          img.style.left = randomX + "px";
+          img.style.top = randomY + "px";
+          img.style.transform = `rotate(${randomRotation}deg)`;
+          
+          img.dataset.originalX = randomX;
+          img.dataset.originalY = randomY;
+          img.dataset.originalRot = randomRotation;
+          img.dataset.currentX = 0;
+          img.dataset.currentY = 0;
+          
+          img.addEventListener("mouseenter", playRandomHoverSound);
+          
+          img.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          });
+          
+          img.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+          });
+          
+          container.appendChild(img);
+        }
+
+        document.addEventListener("mousemove", (e) => {
+          const images = document.querySelectorAll(".hover-image");
+          const mouseX = e.clientX;
+          const mouseY = e.clientY;
+          
+          images.forEach((img) => {
+            const rect = img.getBoundingClientRect();
+            const imgCenterX = rect.left + rect.width / 2;
+            const imgCenterY = rect.top + rect.height / 2;
+            
+            const dx = imgCenterX - mouseX;
+            const dy = imgCenterY - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 225) {
+
+              const force = (225 - distance) / 225;
+              const moveX = (dx / distance) * force * 160;
+              const moveY = (dy / distance) * force * 160;
+              
+              let currentX = parseFloat(img.dataset.currentX) || 0;
+              let currentY = parseFloat(img.dataset.currentY) || 0;
+              
+              const newX = currentX + moveX * 0.25;
+              const newY = currentY + moveY * 0.25;
+              
+              img.dataset.currentX = newX;
+              img.dataset.currentY = newY;
+              
+              const originalRot = parseFloat(img.dataset.originalRot);
+              
+              img.style.transform = `translate(${newX}px, ${newY}px) rotate(${originalRot + force * 20}deg)`;
+            }
+          });
+        });
+      })();
+    </script>
+    <footer class="site-footer">
+      <p>&copy; 2025 Seungyoon Lee. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

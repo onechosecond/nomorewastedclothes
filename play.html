@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이제 새 옷은 그만!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import { fairyDustCursor } from "https://unpkg.com/cursor-effects@latest/dist/esm.js";
+    
+      new fairyDustCursor();
+    </script>
+  </head>
+  <body class="page play-page">
+    <a class="back-link" href="index.html">← 시작 화면으로</a>
+    <header class="page-heading">
+      <div class="actions-panel">
+        <div class="action-buttons">
+          <button class="btn action" id="calculate-btn" type="button" disabled>
+            계산하기
+          </button>
+        </div>
+    </header>
+
+    <section class="game-stage">
+      <div class="avatar-shell">
+        <div class="avatar">
+          <div class="avatar-images" id="avatar-images"></div>
+        </div>
+      </div>
+
+      <div class="selection-panel-wrapper">
+        <div class="selection-panel" id="selection-panel">
+        </div>
+      </div>
+    </section>
+
+    <div class="modal-overlay result-modal" id="result-modal">
+      <div class="modal-content result-modal-content">
+        <div class="result-card" id="result-card" aria-live="polite">
+          <div class="badge" id="result-badge"></div>
+          <h3 id="result-title"></h3>
+          <p id="result-message"></p>
+        </div>
+
+        <div class="post-actions" id="post-actions">
+          <button class="btn reset" type="button" id="reset-btn">다시하기</button>
+          <a class="btn info-link" href="thrift.html">
+            진짜 헌 옷은 어떻게 구할 수 있을까?
+          </a>
+        </div>
+        <div class="result-speaker-images">
+          <img class="result-speaker-image result-speaker-a-image" src="https://cdn0.rubylane.com/_podl/item/719320/TFP-7224337641606/Warner-Bros-Porky-Pig-Felt-Doll-pic-1A-720:10.10-b1b417ba.webp" alt="Speaker A" />
+          <img class="result-speaker-image result-speaker-b-image" src="https://chairish-prod.freetls.fastly.net/image/product/sized/1f7623e8-df0d-4fb3-803a-b61ff25ee877/vintage-plush-mechanical-bear-with-red-barrel-mid-20th-century-toy-0912" alt="Speaker B" />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay dialogue-modal hidden" id="dialogue-modal">
+      <div class="dialogue-content">
+        <div class="dialogue-box" id="dialogue-box">
+          <img class="dialogue-speaker-image speaker-a-image" src="https://cdn0.rubylane.com/_podl/item/719320/TFP-7224337641606/Warner-Bros-Porky-Pig-Felt-Doll-pic-1A-720:10.10-b1b417ba.webp" alt="Speaker A" />
+          <img class="dialogue-speaker-image speaker-b-image" src="https://chairish-prod.freetls.fastly.net/image/product/sized/1f7623e8-df0d-4fb3-803a-b61ff25ee877/vintage-plush-mechanical-bear-with-red-barrel-mid-20th-century-toy-0912" alt="Speaker B" />
+          <div class="dialogue-bubble" id="dialogue-bubble">
+            <span class="dialogue-text" id="dialogue-text"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="tutorial-modal">
+      <div class="modal-content">
+        <h2>HOW TO PLAY</h2>
+        <div class="tutorial-content">
+          <ol>
+            <li> 상의, 하의, 액세서리 각각 하나씩 선택하세요.</li>
+            <li> 계산하기 버튼을 눌러 총 가격을 확인하세요.</li>
+            <li> 빈티지 쇼핑은 <strong>6만원 이상</strong> 쓰면 손해보는거에요.</li>
+          </ol>
+          <p>빈티지 가게는 헌 옷이 아닌 새 상품을 비싸게 팔기도 해요. 잘 골라보세요!</p>
+        </div>
+        <button class="btn primary" id="start-game-btn">코디 시작하기</button>
+      </div>
+    </div>
+
+    <audio id="background-music" loop autoplay>
+      <source src="nebula.mp3" type="audio/mpeg" />
+      <source src="nebula.ogg" type="audio/ogg" />
+    </audio>
+
+    <script src="data.js"></script>
+    <script src="play.js"></script>
+    <script>
+      (() => {
+        const bgMusic = document.getElementById("background-music");
+        if (bgMusic) {
+          bgMusic.volume = 0.3;
+          bgMusic.loop = true;
+          
+          const playPromise = bgMusic.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                console.log("Background music started");
+              })
+              .catch((error) => {
+                console.log("Autoplay prevented, will play after user interaction");
+                document.addEventListener("click", () => {
+                  bgMusic.play().catch((err) => {
+                    console.log("Background music play failed:", err);
+                  });
+                }, { once: true });
+              });
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
